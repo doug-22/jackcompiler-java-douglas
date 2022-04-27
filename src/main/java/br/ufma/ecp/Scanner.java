@@ -11,6 +11,13 @@ public class Scanner {
     start = 0;
   }
 
+  private void advance() {
+    char ch = peek();
+    if (ch != 0) {
+      current++;
+    }
+  }
+
   private void match( char c ) {
     if ( c == peek() ) {
       current++;
@@ -26,5 +33,5 @@ public class Scanner {
       return 0;
     }
   }
-  
+
 }
