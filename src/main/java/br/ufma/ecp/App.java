@@ -23,6 +23,8 @@ public class App
 
     public static void main( String[] args )
     {
-        System.out.println( fromFile() );
+        String input = "2+5-9";
+        Parser p = new Parser(input.getBytes());
+        p.parser();
     }
 }

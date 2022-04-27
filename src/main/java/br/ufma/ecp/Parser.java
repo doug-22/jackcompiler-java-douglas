@@ -25,6 +25,10 @@ public class Parser {
     }
   }
 
+  void parser() {
+    expr();
+  }
+
   void expr() {
     digit();
     oper();
