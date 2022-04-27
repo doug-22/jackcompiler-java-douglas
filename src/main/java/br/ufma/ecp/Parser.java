@@ -38,10 +38,12 @@ public class Parser {
     if ( peek() == '+') {
       match('+');
       digit();
+      System.out.println("add");
       oper();
     } else if ( peek() == '-') {
       match('-');
       digit();
+      System.out.println("sub");
       oper();
     } else if ( peek() == 0) {
       //Ok!
@@ -52,6 +54,7 @@ public class Parser {
 
   void digit() {
     if (Character.isDigit( peek() )) {
+      System.out.println( "push " + peek() );
       match( peek() );
     } else {
       throw new Error("Syntax Error");
