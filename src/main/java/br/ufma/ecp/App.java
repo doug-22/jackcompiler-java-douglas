@@ -23,8 +23,14 @@ public class App
 
     public static void main( String[] args )
     {
-        String input = "2+5-9";
-        Parser p = new Parser(input.getBytes());
-        p.parser();
+        // String input = "2+5";
+        // Parser p = new Parser(input.getBytes());
+        // p.parser();
+
+        String input = "259+5";
+        Scanner s = new Scanner(input.getBytes());
+        System.out.println(s.nextToken());
+        System.out.println(s.nextToken());
+        System.out.println(s.nextToken());
     }
 }
