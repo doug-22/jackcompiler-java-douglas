@@ -23,14 +23,14 @@ public class App
 
     public static void main( String[] args )
     {
-        // String input = "2+5";
-        // Parser p = new Parser(input.getBytes());
-        // p.parser();
+        String input = "2+teste while +5-52";
+        Parser p = new Parser(input.getBytes());
+        p.parser();
 
-        String input = "259+5";
-        Scanner s = new Scanner(input.getBytes());
-        System.out.println(s.nextToken());
-        System.out.println(s.nextToken());
-        System.out.println(s.nextToken());
+        // String input = "preco1 +259+5-6";
+        // Scanner scan = new Scanner(input.getBytes());
+        // for (Token tk = scan.nextToken(); tk.type != TokenType.EOF; tk = scan.nextToken()) {
+        //     System.out.println(tk);
+        // }
     }
 }

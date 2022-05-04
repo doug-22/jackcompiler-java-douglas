@@ -2,62 +2,82 @@ package br.ufma.ecp;
 
 public class Parser {
   
-  private byte[] input;
-  private int current;
+  private Scanner scan;
+  private Token currentToken;
 
   public Parser (byte[] input) {
-    this.input = input;
+    scan = new Scanner( input );
+    nextToken();
+  }
+  
+  private void nextToken() {
+    currentToken = scan.nextToken();
   }
 
-  private void match( char c ) {
-    if ( c == peek() ) {
-      current++;
+  private void match( TokenType type ) {
+    if ( currentToken.type == type ) {
+      nextToken();;
     } else {
-      throw new Error("Syntax Error");
+      throw new Error("Syntax Error - expected " + type + " found " + currentToken.lexeme);
     }
   }
 
-  private char peek() {
-    if ( current < input.length ) {
-      return (char)input[current];
-    } else {
-      return 0;
-    }
-  }
+  // private char peek() {
+  //   if ( current < input.length ) {
+  //     return (char)input[current];
+  //   } else {
+  //     return 0;
+  //   }
+  // }
 
   void parser() {
     expr();
   }
 
   void expr() {
-    digit();
+    term();
     oper();
   }
 
-  void oper() {
-    if ( peek() == '+') {
-      match('+');
-      digit();
-      System.out.println("add");
-      oper();
-    } else if ( peek() == '-') {
-      match('-');
-      digit();
-      System.out.println("sub");
-      oper();
-    } else if ( peek() == 0) {
-      //Ok!
+  void term () {
+    if ( currentTokenIs( TokenType.NUMBER )) {
+      number();
+    } else if ( currentTokenIs( TokenType.IDENTIFIER )) {
+      identifier();
     } else {
-      throw new Error("Syntax Error");
+      throw new Error("Syntax Error - found " + currentToken.lexeme);
     }
   }
 
-  void digit() {
-    if (Character.isDigit( peek() )) {
-      System.out.println( "push " + peek() );
-      match( peek() );
+  void oper() {
+    if ( currentTokenIs( TokenType.PLUS ) ) {
+      match( TokenType.PLUS );
+      term();
+      System.out.println("add");
+      oper();
+    } else if ( currentTokenIs( TokenType.MINUS ) ) {
+      match( TokenType.MINUS );
+      term();
+      System.out.println("sub");
+      oper();
+    } else if ( currentTokenIs( TokenType.EOF ) ) {
+      //Ok!
     } else {
-      throw new Error("Syntax Error");
+      throw new Error("Syntax Error - found " + currentToken.lexeme);
     }
+  }
+
+  void number() {
+    System.out.println( "push " + currentToken.lexeme );
+    match( TokenType.NUMBER );
+  }
+
+  void identifier() {
+    System.out.println( "push " + currentToken.lexeme );
+    match( TokenType.IDENTIFIER );
+  }
+
+  boolean currentTokenIs ( TokenType type ) {
+    return currentToken.type == type;
   }
 }
