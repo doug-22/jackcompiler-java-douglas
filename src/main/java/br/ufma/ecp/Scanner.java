@@ -1,11 +1,21 @@
 package br.ufma.ecp;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Scanner {
   private byte[] input;
   private int current;
   private int start;
+
+  private static final Map<String, TokenType> keywords;
+
+  static {
+    keywords = new HashMap<>();
+    keywords.put("while", TokenType.WHILE);
+  }
+
 
   public Scanner (byte[] input) {
     this.input = input;
@@ -13,31 +23,67 @@ public class Scanner {
     start = 0;
   }
 
-  public String nextToken() {
+  public Token nextToken() {
+    
+    skipWhitespace();
+
     start = current;
     char ch = peek();
     if (Character.isDigit(ch)) {
       return number();
     }
+
+    if (Character.isLetter(ch)) {
+      return identifier();
+    }
+
     switch (ch) {
       case '+':
         advance();
-        return "+";
+        return new Token(TokenType.PLUS, "+");
       case '-':
         advance();
-        return "-";
+        return new Token(TokenType.MINUS, "-");
+      case 0:
+        return new Token(TokenType.EOF, "EOF");
       default:
-        break;
+        advance();
+        return new Token(TokenType.ILLEGAL, Character.toString(ch));
     }
-    return "";
   }
 
-  private String number() {
+  private void skipWhitespace() {
+    char ch = peek();
+    while ( ch == ' ' || ch == '\r' || ch =='\t' || ch == '\n') {
+      advance();
+      ch = peek();
+    }
+  }
+
+  private boolean isAlpahNumeric( char ch ) {
+    return Character.isLetter(ch) || Character.isDigit(ch);
+  }
+
+  private Token identifier() {
+    while (isAlpahNumeric( peek() )) {
+      advance();
+    }
+    String s = new String(input, start, current - start, StandardCharsets.UTF_8);
+    TokenType type = keywords.get(s);
+    if (type == null) {
+      type = TokenType.IDENTIFIER;
+    }
+    Token token = new Token (type, s);
+    return token;
+  }
+
+  private Token number() {
     while (Character.isDigit( peek() )) {
       advance();
     }
     String s = new String(input, start, current - start, StandardCharsets.UTF_8);
-    return s;
+    Token token = new Token (TokenType.NUMBER, s);
+    return token;
   }
 
   private void advance() {
